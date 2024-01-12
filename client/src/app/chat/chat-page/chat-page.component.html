@@ -1,0 +1,8 @@
+<header class="bg-green-500 text-white font-semibold p-2" *ngIf="displayTyping">{{ typingMessage }} <div class="loader"></div></header>
+<ul id="messages">
+  <li [ngClass]="{'mine': socket.id === message.id}" *ngFor="let message of messages">{{ message.message }}</li>
+</ul>
+<form id="form" action="">
+  <input placeholder="Write your message" id="input" autocomplete="off" (input)="checkTyping($event)" #input/>
+  <button type="button" (click)="submitForm(input)">Send</button>
+</form>
