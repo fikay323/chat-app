@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Query, QueryList, ViewChildren } from '@angular/core';
 import { Message } from '../../message.model';
 import { ChatService } from '../chat.service';
 import { io } from 'socket.io-client';
+import { v4 } from 'uuid';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -17,10 +19,18 @@ export class ChatPageComponent {
   socket = io('http://localhost:3000')
   typingMessage = 'User is typing'
   displayTyping = false
+  @ViewChildren('li') messageItems: QueryList<ElementRef>
+  sessionID: string
 
   constructor(private chatService: ChatService){}
 
   ngOnInit(){
+    this.sessionID = localStorage.getItem('sessionID')
+    if(!this.sessionID) {
+      this.sessionID = v4()
+      localStorage.setItem('sessionID', this.sessionID)
+    }
+    this.socket
     this.socket.on('recieve-message', message => {
       this.messages.push(message)
     })
@@ -32,6 +42,17 @@ export class ChatPageComponent {
         this.displayTyping = false
       }
     })
+  }
+  disconnect = true
+  changeConnect() {
+    if(this.disconnect) {
+      this.socket.disconnect()
+      this.disconnect = false
+      
+    } else {
+      this.socket.connect()
+      this.disconnect = true
+    }
   }
 
   submitForm(input: HTMLInputElement) {

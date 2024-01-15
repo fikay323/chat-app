@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { AuthService } from 'src/app/providers/auth.service';
+import { FormsModule, NgForm } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [FormsModule, CommonModule]
 })
 export class LoginComponent {
   isFetching = false
@@ -20,13 +23,13 @@ export class LoginComponent {
       email: loginForm.value.email,
       password: loginForm.value.password
     }
-    this.authService.login(user).then(response => {
-      this.authService.handleAuthentication(response.user, this.isFetching)
-    })
-    .catch(error => {
-      this.isFetching = false
-      this.errorMessage = this.authService.handleError(error)
-    })
+    // this.authService.login(user).then(response => {
+    //   this.authService.handleAuthentication(response.user, this.isFetching)
+    // })
+    // .catch(error => {
+    //   this.isFetching = false
+    //   this.errorMessage = this.authService.handleError(error)
+    // })
   }
 
   closeAlertComponent() {

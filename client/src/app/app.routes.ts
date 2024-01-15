@@ -7,7 +7,7 @@ import { RegisterComponent } from './auth/register/register.component';
 export const routes: Routes = [
     { path: '', redirectTo: 'chat', pathMatch: 'full' },
     { path: 'auth', component: AuthComponent, children: [
-        { path: '', redirectTo: 'login' },
+        { path: '', redirectTo: 'login', pathMatch: 'full' },
         { path: 'login', component: LoginComponent },
         { path: 'register', component: RegisterComponent }
     ]},

@@ -1,55 +1,9 @@
-// const io = require('socket.io')(3000, {
-//   cors: {
-//     origin: ['http://localhost:4200']
-//   }
-// })
-
-// console.log('Connected');
-// io.use((socket, next) => {
-//   const sessionID = socket.handshake.auth.sessionID;
-//   if (sessionID) {
-//     // find existing session
-//     const session = sessionStore.findSession(sessionID);
-//     if (session) {
-//       socket.sessionID = sessionID;
-//       socket.userID = session.userID;
-//       socket.username = session.username;
-//       return next();
-//     }
-//   }
-//   const username = socket.handshake.auth.username;
-//   if (!username) {
-//     return next(new Error("invalid username"));
-//   }
-//   // create new session
-//   socket.sessionID = randomId();
-//   socket.userID = randomId();
-//   socket.username = username;
-//   next();
-// });
-// io.on('connection', socket => {
-//   console.log(socket.id)
-//   console.log(socket.handshake.auth);
-
-//   socket.on('send-message', (message, room) => {
-//     if(room === '') {
-//       socket.broadcast.emit('recieve-message', message)
-//     } else {
-//       socket.to(room).emit('recieve-message', message)
-//     }
-//   })
-
-//   socket.on('join-room', roomId => {
-//     socket.join(roomId)
-//   })
-// })
-
-
 
 const express = require('express');
 const { createServer } = require('http');
 const { join } = require('path');
 const { Server } = require('socket.io')
+const { v4:uuidv4 } = require('uuid')
 
   const app = express()
   const server = createServer(app)
@@ -62,9 +16,17 @@ const { Server } = require('socket.io')
   app.get('/', (req, res) => {
     res.sendFile(join(__dirname, 'index.html'))
   })
-
+io.use((socket, next) => {
+  next()
+})
 io.on('connection', (socket) => {
-  console.log('A user is connected');
+  // let socketID = socket.handshake.query.sessionID
+
+  // if(!sessionID) {
+  //   sessionID = generateUID()
+  // }
+  console.log('A user is connected with socketID ' + socket.id)
+  // socket.id = sessionID
 
   socket.on('send-message', (message) => {
     // if(room === '') {
@@ -79,9 +41,13 @@ io.on('connection', (socket) => {
   })
   
   socket.on('disconnect', () => {
-    console.log("User Disconnected");
+    console.log(`User with id ${socket.id} has disconnected`);
   })
 })
+
+function generateUID() {
+  return uuidv4;
+}
 
 server.listen(3000, () => {
   console.log('Server running on port 3000');

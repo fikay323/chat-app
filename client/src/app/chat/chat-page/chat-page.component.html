@@ -1,8 +1,15 @@
-<header class="bg-green-500 text-white font-semibold p-2" *ngIf="displayTyping">{{ typingMessage }} <div class="loader"></div></header>
-<ul id="messages">
-  <li [ngClass]="{'mine': socket.id === message.id}" *ngFor="let message of messages">{{ message.message }}</li>
-</ul>
-<form id="form" action="">
-  <input placeholder="Write your message" id="input" autocomplete="off" (input)="checkTyping($event)" #input/>
-  <button type="button" (click)="submitForm(input)">Send</button>
-</form>
+<section he class=" h-[100vh]">
+  <p class="bg-gray-300 p-1">You are welcome with session ID {{ sessionID }}</p>
+  <header class="bg-green-500 text-white font-semibold p-2" *ngIf="displayTyping">{{ typingMessage }} <div class="loader"></div></header>
+  <form id="form"  class="bg-white">
+    <ul id="messages" class="w-full h-[90vh] overflow-y-auto">
+      <li [ngClass]="{'mine': socket.id === message.id}" *ngFor="let message of messages" #li>{{ message.message }}</li>
+      <!-- <li class="bg-purple-600 mt-2" *ngFor="let message of messagess" #li>{{ message }}</li> -->
+    </ul>
+    <button type="button" class="absolute top-0 left-0" (click)="changeConnect()">Connect</button>
+    <section class="absolute bottom-0 right-0 bg-gray-300 w-3/4 p-2 flex">
+      <input class="border-black border-2 p-1" placeholder="Write your message" id="input" autocomplete="off" (input)="checkTyping($event)" #input/>
+      <button class="bg-gray-300 text-black font-semibold border-2 border-black rounded-md p-1" type="button" (click)="submitForm(input)">Send</button>
+    </section>
+  </form>
+</section>
