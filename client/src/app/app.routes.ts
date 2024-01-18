@@ -3,6 +3,7 @@ import { ChatComponent } from './chat/chat.component';
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { chatGuard } from './chat/chat.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'chat', pathMatch: 'full' },
@@ -11,5 +12,5 @@ export const routes: Routes = [
         { path: 'login', component: LoginComponent },
         { path: 'register', component: RegisterComponent }
     ]},
-    { path: 'chat', component: ChatComponent}
+    { path: 'chat', component: ChatComponent, canActivate: [chatGuard]}
 ];

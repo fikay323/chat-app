@@ -1,7 +1,7 @@
 <div *ngIf="!isFetching" class="register-container border shadow-2xl rounded-lg">
     <form (ngSubmit)="register(registerForm)" #registerForm="ngForm">
-        <label for="username">Email</label>
-        <input type="text" class="rounded-md bg-blue-100 border border-blue-400 focus:border-2" id="username" name="email" email ngModel required>
+        <label for="username">Username</label>
+        <input type="text" class="rounded-md bg-blue-100 border border-blue-400 focus:border-2" id="username" name="username" ngModel required>
         
         <label for="password">Password</label>
         <input type="password" class="rounded-md bg-blue-100 border border-blue-400 focus:border-2" id="password" name="password" ngModel required minlength="6">
@@ -10,7 +10,7 @@
         <p class="text-zinc-600 text-sm font-medium mt-3 text-center">Already have an account? <a routerLink="/auth/login" class="hover:underline hover:font-semibold sm:cursor-default md:cursor-pointer">Sign In</a></p>
     </form>
 </div>
-<!-- <div *ngIf="isFetching" class="text-center">
+<div *ngIf="isFetching" class="text-center">
     <app-loading-spinner></app-loading-spinner>
-</div> -->
-<!-- <app-alert *ngIf="errorMessage" [message]="errorMessage" (close)="closeAlertComponent()"></app-alert> -->
+</div>
+<app-alert *ngIf="errorMessage" [message]="errorMessage" (close)="closeAlertComponent()"></app-alert>

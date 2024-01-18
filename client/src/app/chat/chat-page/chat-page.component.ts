@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Query, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { Message } from '../../message.model';
 import { ChatService } from '../chat.service';
-import { io } from 'socket.io-client';
 import { v4 } from 'uuid';
-import { from } from 'rxjs';
+import socket from '../../socket';
 
 @Component({
   selector: 'app-chat-page',
@@ -16,11 +15,12 @@ import { from } from 'rxjs';
 export class ChatPageComponent {
   messagess: string[] = ['efdd', 'dvjdld', 'vidjdo9jdo', 'nkdjnvid', 'fdbhjf', 'sndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj']
   messages: Message[] = []
-  socket = io('http://localhost:3000')
+  socket = socket
   typingMessage = 'User is typing'
   displayTyping = false
   @ViewChildren('li') messageItems: QueryList<ElementRef>
   sessionID: string
+  username = ''
 
   constructor(private chatService: ChatService){}
 
@@ -30,7 +30,8 @@ export class ChatPageComponent {
       this.sessionID = v4()
       localStorage.setItem('sessionID', this.sessionID)
     }
-    this.socket
+    console.log(socket)
+    console.log(this.socket['user'])
     this.socket.on('recieve-message', message => {
       this.messages.push(message)
     })

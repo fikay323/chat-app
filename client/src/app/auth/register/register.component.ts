@@ -1,35 +1,43 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { AlertComponent } from '../alert/alert.component';
+import socket from '../../socket';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent, AlertComponent]
 })
 export class RegisterComponent {
   isFetching = false
-  errorMessage = null
+  errorMessage = this.authService.errorMessage
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    socket.on('connect', () => {
+      this.isFetching = false
+      this.router.navigate(['chat'])
+    })
+    socket.on('connect_error', (message) => {
+      this.errorMessage = message.message
+    })
+  }
 
   register(registerForm: NgForm) {
     if(!registerForm.valid) return
     this.isFetching = true
     const user = {
-      email: registerForm.value.email,
+      username: registerForm.value.username,
       password: registerForm.value.password
     }
-    // this.authService.signUp(user).then(response => {
-    //   this.authService.handleAuthentication(response.user, this.isFetching)
-    // })
-    // .catch(error => {
-    //   this.isFetching = false
-    //   this.errorMessage = this.authService.handleError(error)
-    // })
+    this.authService.signUp(user, this.isFetching)
   }
   closeAlertComponent() {
     this.errorMessage = null

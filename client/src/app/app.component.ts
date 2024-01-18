@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import socket from './socket'
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   standalone: true
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private router: Router) {}
+}
