@@ -38,7 +38,6 @@ io.use((socket, next) => {
     addUser(userToAdd)
     socket.id = userID
   } else if(auth === 'auto-login'){
-    console.log(allUsers)
     const userID = socket.handshake.auth.userID
     const user = allUsers.find(person => person.userID == userID)
     if(user){
@@ -46,6 +45,19 @@ io.use((socket, next) => {
       socket.user = user
     } else {
       return next(new Error('ID not found'))
+    }
+  } else if(auth === 'login') {
+    console.log(allUsers);
+    const userDetails = socket.handshake.auth
+    console.log(userDetails)
+    const user = allUsers.find((person) => {
+      return person.username === userDetails.username
+    })
+    if(user) {
+      socket.id = user.userID
+      socket.user = user
+    } else {
+      return next(new Error('Username or password incorrect'))
     }
   }
   return next()

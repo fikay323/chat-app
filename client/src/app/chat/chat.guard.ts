@@ -9,7 +9,7 @@ export const chatGuard = (route, state) => {
       return true
     } else {
       console.log(value)
-      return inject(Router).navigate(['auth/register'])
+      return inject(Router).navigate(['auth/login'])
     }
   })
 };

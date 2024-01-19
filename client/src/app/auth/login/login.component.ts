@@ -33,7 +33,7 @@ export class LoginComponent {
     if(!loginForm.valid) return
     this.isFetching = true
     const user = {
-      email: loginForm.value.username,
+      username: loginForm.value.username,
       password: loginForm.value.password
     }
     this.authService.login(user, this.isFetching)

@@ -15,8 +15,9 @@ export class AppComponent {
   ngOnInit() {
     this.authService.autoLogin()
     socket.on('connect_error', err => {
+      this.authService.is = false
       localStorage.removeItem('userID')
-      this.router.navigate(['auth/register'])
+      this.router.navigate(['auth/login'])
     })
   }
 }
