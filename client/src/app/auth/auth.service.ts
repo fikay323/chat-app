@@ -31,9 +31,11 @@ export class AuthService {
     socket.connect()
   }
   
-  // login(user: any) {
-  //   return this.afs.signInWithEmailAndPassword(user.email, user.password)
-  // }
+  login(user: any, isLoading: boolean) {
+    this.loader = isLoading
+    socket.auth = {...user, auth: 'login'}
+    socket.connect()
+  }
 
   // logout() {
   //   clearTimeout(this.logoutTimer)
