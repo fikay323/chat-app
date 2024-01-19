@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { Message } from '../../message.model';
 import { ChatService } from '../chat.service';
-import { v4 } from 'uuid';
 import socket from '../../socket';
 
 @Component({
@@ -25,13 +24,8 @@ export class ChatPageComponent {
   constructor(private chatService: ChatService){}
 
   ngOnInit(){
-    this.sessionID = localStorage.getItem('sessionID')
-    if(!this.sessionID) {
-      this.sessionID = v4()
-      localStorage.setItem('sessionID', this.sessionID)
-    }
     console.log(socket)
-    console.log(this.socket['user'])
+    // console.log(this.socketuser)
     this.socket.on('recieve-message', message => {
       this.messages.push(message)
     })

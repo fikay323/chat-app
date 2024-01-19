@@ -2,13 +2,16 @@ import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, RouterModule, LoadingSpinnerComponent, AlertComponent]
 })
 export class LoginComponent {
   isFetching = false

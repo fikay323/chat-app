@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import socket from './socket'
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,12 @@ import socket from './socket'
   standalone: true
 })
 export class AppComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+  ngOnInit() {
+    this.authService.autoLogin()
+    socket.on('connect_error', err => {
+      localStorage.removeItem('userID')
+      this.router.navigate(['auth/register'])
+    })
+  }
 }

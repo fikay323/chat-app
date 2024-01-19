@@ -5,14 +5,14 @@ import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AlertComponent } from '../alert/alert.component';
 import socket from '../../socket';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [FormsModule, CommonModule, LoadingSpinnerComponent, AlertComponent]
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent, AlertComponent, RouterModule]
 })
 export class RegisterComponent {
   isFetching = false

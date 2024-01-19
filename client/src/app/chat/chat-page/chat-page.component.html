@@ -1,5 +1,5 @@
 <section he class=" h-[100vh]">
-  <p class="bg-gray-300 p-1">You are welcome {{ sessionID }}</p>
+  <p class="bg-gray-300 p-1">You are welcome {{ socket.id }}</p>
   <header class="bg-green-500 text-white font-semibold p-2" *ngIf="displayTyping">{{ typingMessage }} <div class="loader"></div></header>
   <form id="form"  class="bg-white">
     <ul id="messages" class="w-full h-[90vh] overflow-y-auto">

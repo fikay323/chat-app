@@ -23,12 +23,12 @@ let allUsers = []
 
 io.use((socket, next) => {
   const user = socket.handshake.auth
-  const username = user.username
-  const password = user.password
-  const userID = uuidv4()
   const auth = user.auth
-
+  
   if(auth === 'register') {
+    const username = user.username
+    const password = user.password
+    const userID = uuidv4()
     const userToAdd = {
       "username": username,
       "password": password,
@@ -36,8 +36,18 @@ io.use((socket, next) => {
     }
     socket.user = userToAdd
     addUser(userToAdd)
+    socket.id = userID
+  } else if(auth === 'auto-login'){
+    console.log(allUsers)
+    const userID = socket.handshake.auth.userID
+    const user = allUsers.find(person => person.userID == userID)
+    if(user){
+      socket.id = userID
+      socket.user = user
+    } else {
+      return next(new Error('ID not found'))
+    }
   }
-  socket.id = userID
   return next()
 })
 io.on('connection', (socket) => {

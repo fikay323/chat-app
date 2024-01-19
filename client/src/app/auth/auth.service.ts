@@ -15,14 +15,14 @@ export class AuthService {
   constructor(private router: Router) {
     socket.on('connect', () => {
       this.isConnected.next(true)
+      localStorage.setItem('userID', socket.id)
     })
     socket.on('disconnect', () => {
       this.isConnected.next(false)
     })
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
   
   signUp(user: any, isLoading: boolean) {
     this.loader = isLoading
@@ -44,22 +44,13 @@ export class AuthService {
   //   })
   // }
 
-  // autoLogin() {
-  //   if(localStorage['userData']) {
-  //     const userData: {
-  //       email: string,
-  //       id: string,
-  //       expiryDate: Date,
-  //       _token: string,
-  //     } = JSON.parse(localStorage.getItem('userData'))
-  //     const user = new User(userData.email, userData.id, userData.expiryDate, userData._token)
-  //     if(user.token) {
-  //       const expiresIn = new Date(new Date(userData.expiryDate).getTime() - new Date().getTime())
-  //       this.User.next(user)
-  //       this.autoLogout(expiresIn.getTime())
-  //     }
-  //   }
-  // }
+  autoLogin() {
+    if(localStorage['userID']) {
+      const userID = localStorage.getItem('userID')
+      socket.auth = { userID: userID, auth: 'auto-login' }
+      socket.connect()
+    }
+  }
     
   handleAuthentication(userdata, isFetching) {
     let currentDate = new Date();
