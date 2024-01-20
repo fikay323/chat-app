@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class AuthService {
-  loader: boolean
+  isFetching: boolean = false
   errorMessage: string = null
   isConnected = new BehaviorSubject<boolean>(false)
   constructor(private router: Router) {
@@ -21,18 +21,14 @@ export class AuthService {
       this.isConnected.next(false)
     })
   }
-
-  ngOnInit() {}
   
-  signUp(user: any, isLoading: boolean) {
-    this.loader = isLoading
+  signUp(user: any) {
     const userToSend = {...user, auth: 'register'}
     socket.auth = { ...userToSend }
     socket.connect()
   }
   
-  login(user: any, isLoading: boolean) {
-    this.loader = isLoading
+  login(user: any) {
     socket.auth = {...user, auth: 'login'}
     socket.connect()
   }

@@ -4,8 +4,7 @@ import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AlertComponent } from '../alert/alert.component';
-import socket from '../../socket';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -15,20 +14,10 @@ import { Router, RouterModule } from '@angular/router';
   imports: [FormsModule, CommonModule, LoadingSpinnerComponent, AlertComponent, RouterModule]
 })
 export class RegisterComponent {
-  isFetching = false
+  isFetching = this.authService.isFetching
   errorMessage = this.authService.errorMessage
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  ngOnInit() {
-    socket.on('connect', () => {
-      this.isFetching = false
-      this.router.navigate(['chat'])
-    })
-    socket.on('connect_error', (message) => {
-      this.errorMessage = message.message
-    })
-  }
+  constructor(private authService: AuthService){}
 
   register(registerForm: NgForm) {
     if(!registerForm.valid) return
@@ -37,8 +26,9 @@ export class RegisterComponent {
       username: registerForm.value.username,
       password: registerForm.value.password
     }
-    this.authService.signUp(user, this.isFetching)
+    this.authService.signUp(user)
   }
+
   closeAlertComponent() {
     this.errorMessage = null
   }
