@@ -19,13 +19,12 @@ export class ChatPageComponent {
   displayTyping = false
   @ViewChildren('li') messageItems: QueryList<ElementRef>
   sessionID: string
-  username = ''
+  // username = ''
 
   constructor(private chatService: ChatService){}
 
   ngOnInit(){
     console.log(socket)
-    // console.log(this.socketuser)
     this.socket.on('recieve-message', message => {
       this.messages.push(message)
     })

@@ -28,7 +28,7 @@ export class AppComponent {
       this.router.navigate(['auth/login'])
     })
     socket.on('session', userData => {
-      console.log(userData)
+      this.authService.userConnected.next(userData)
     })
   }
 }
