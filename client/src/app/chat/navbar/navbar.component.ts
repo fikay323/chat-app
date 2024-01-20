@@ -1,22 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule} from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
     selector: 'app-navbar',
     styleUrls: ['navbar.component.css'],
     templateUrl: 'navbar.component.html',
-    imports: [
-      MatSidenavModule, 
-      MatFormFieldModule, 
-      MatSelectModule, 
-      MatButtonModule, 
-      MatIconModule
-    ],
+    imports: [CommonModule, FormsModule],
 })
 export class NavbarComponent {
+  searchString: string
+  timer: any
+
+  search(val) {
+    clearTimeout(this.timer)
+    this.timer = setTimeout(() => {
+      
+    },1000)
+  }
 };

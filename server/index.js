@@ -47,9 +47,7 @@ io.use((socket, next) => {
       return next(new Error('ID not found'))
     }
   } else if(auth === 'login') {
-    console.log(allUsers);
     const userDetails = socket.handshake.auth
-    console.log(userDetails)
     const user = allUsers.find((person) => {
       return person.username === userDetails.username
     })
@@ -67,13 +65,15 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', (message) => {
     // if(room === '') {
+      console.log(message)
       socket.broadcast.emit('recieve-message', message)
     // } else {
-    //   socket.to(room).emit('recieve-message', message)
+      // socket.to('c2973128-66bc-4bdd-ac59-4030649bc6ad').emit('recieve-message', message)
     // }
   })
 
   socket.on('typing-info', message => {
+    console.log(message)
     socket.broadcast.emit('typing', message)
   })
   

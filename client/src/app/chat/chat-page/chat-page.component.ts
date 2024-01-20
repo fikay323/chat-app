@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
+
 import { Message } from '../../message.model';
+import { AuthService } from '../../auth/auth.service';
 import { ChatService } from '../chat.service';
 import socket from '../../socket';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -16,70 +19,44 @@ export class ChatPageComponent {
   messages: Message[] = []
   socket = socket
   typingMessage = 'User is typing'
+  username: string
   displayTyping = false
-  @ViewChildren('li') messageItems: QueryList<ElementRef>
-  sessionID: string
-  // username = ''
+  changed = false
 
-  constructor(private chatService: ChatService){}
+  constructor(private authService: AuthService, private chatService: ChatService){}
 
   ngOnInit(){
-    console.log(socket)
-    this.socket.on('recieve-message', message => {
+    // this.socket.on('recieve-message', (message) =>{
+    //   console.log(message)
+    // });
+    this.authService.userConnected.subscribe(data => {
+      this.username = data.username
+    })
+    this.chatService.getStatus().subscribe(istyping => {
+      this.displayTyping = istyping
+    })
+    this.chatService.getNewMessage().subscribe(message => {
       this.messages.push(message)
-    })
-    this.socket.on('typing', isTyping => {
-      if(isTyping === 'Typing') {
-        this.displayTyping = true
-      }
-      else {
-        this.displayTyping = false
-      }
-    })
-  }
-  disconnect = true
-  changeConnect() {
-    if(this.disconnect) {
-      this.socket.disconnect()
-      this.disconnect = false
-      
-    } else {
-      this.socket.connect()
-      this.disconnect = true
-    }
+    })  
   }
 
   submitForm(input: HTMLInputElement) {
     let message = new Message(input.value, this.socket.id)
     this.messages.push(message)
-    this.socket.emit('send-message', message)
+    this.chatService.sendMessage(message)
     this.changed = false
     input.value = ''
-    this.emitStatus('Not typing')
-  }
-
-  
-  changed = false
-  emitStatus(isTyping: string) {
-    this.socket.emit('typing-info', isTyping)
+    this.chatService.emitStatus('Not typing')
   }
 
   checkTyping(event: any) {
     const message = event.target.value
     if(message != '' && this.changed == false) {
-      console.log('Started Typing')
       this.changed = true
-      this.emitStatus('Typing')
+      this.chatService.emitStatus('Typing')
     } else if(message == '' && this.changed == true) {
-      console.log('Stopped Typing')
       this.changed = false
-      this.emitStatus('Not typing')
+      this.chatService.emitStatus('Not typing')
     }
-    
-  }
-
-  joinRoom(roomId: string) {
-    console.log(roomId)
-    this.socket.emit('join-room', roomId)
   }
 }

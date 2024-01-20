@@ -1,3 +1,3 @@
 <div class="w-full bg-gray-500 h-full flex ">
-    <input class="inline-block m-auto p-2 mt-3 rounded-xl" type="text" placeholder="Search">
+    <input class="inline-block m-auto p-2 mt-3 rounded-xl min-w-0" type="text" [(ngModel)]="searchString" (ngModelChange)="search($event)" placeholder="Search">
 </div>

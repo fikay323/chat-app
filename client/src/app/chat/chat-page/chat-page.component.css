@@ -5,6 +5,7 @@
   border-radius: 2rem; 
   margin: 0.25rem; 
   text-transform: capitalize;
+  min-width: 0px;
 }
 #input:focus { 
   outline: none; 
@@ -24,14 +25,6 @@
   margin: 0; 
   padding: 0;
 }
-
-/* li {
-  max-width: 60%;
-  width: -moz-fit-content;
-  width: fit-content;
-  word-break: break-all;
-} */
-/* #messages > li:nth-child(odd) { background: #efefef; } */
 
 .loader {
   display: inline-block;
