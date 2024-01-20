@@ -12,15 +12,7 @@ export class AuthService {
   isFetching: boolean = false
   errorMessage: string = null
   isConnected = new BehaviorSubject<boolean>(false)
-  constructor(private router: Router) {
-    socket.on('connect', () => {
-      this.isConnected.next(true)
-      localStorage.setItem('userID', socket.id)
-    })
-    socket.on('disconnect', () => {
-      this.isConnected.next(false)
-    })
-  }
+  constructor(private router: Router) {}
   
   signUp(user: any) {
     const userToSend = {...user, auth: 'register'}

@@ -34,7 +34,7 @@ io.use((socket, next) => {
       "password": password,
       "userID": userID
     }
-    socket.user = userToAdd
+    socket.emit('session', userToAdd)
     addUser(userToAdd)
     socket.id = userID
   } else if(auth === 'auto-login'){
@@ -42,7 +42,7 @@ io.use((socket, next) => {
     const user = allUsers.find(person => person.userID == userID)
     if(user){
       socket.id = userID
-      socket.user = user
+      socket.emit('session', user)
     } else {
       return next(new Error('ID not found'))
     }
