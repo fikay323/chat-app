@@ -25,15 +25,6 @@ export class AuthService {
     socket.connect()
   }
 
-  // logout() {
-  //   clearTimeout(this.logoutTimer)
-  //   this.afs.signOut().then(() => {  
-  //     this.User.next(null)
-  //     localStorage.removeItem('userData')
-  //     this.router.navigate(['/auth', 'login'])
-  //   })
-  // }
-
   autoLogin() {
     if(localStorage['userID']) {
       const userID = localStorage.getItem('userID')
@@ -49,20 +40,4 @@ export class AuthService {
     isFetching = false
     this.router.navigate(['/tasks/today'])
   }
-
-  // handleError(error) {
-  //   let errorMesssage = 'An unknown error occurred. Pls check your network connection and try again'
-  //   switch(error.code){
-  //     case ('auth/invalid-credential'): 
-  //      errorMesssage = 'Username or password incorrect'
-  //     break;
-  //     case ('auth/too-many-requests'): 
-  //      errorMesssage = 'To many requests, try again later'
-  //     break;
-  //     case ('auth/email-already-in-use'): 
-  //      errorMesssage = 'An account has registered with this email address, try signing in'
-  //     break;
-  //   }
-  //   return errorMesssage
-  // }
 }
