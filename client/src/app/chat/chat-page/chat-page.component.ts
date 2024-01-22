@@ -26,9 +26,6 @@ export class ChatPageComponent {
   constructor(private authService: AuthService, private chatService: ChatService){}
 
   ngOnInit(){
-    // this.socket.on('recieve-message', (message) =>{
-    //   console.log(message)
-    // });
     this.authService.userConnected.subscribe(data => {
       this.username = data.username
     })
@@ -37,7 +34,10 @@ export class ChatPageComponent {
     })
     this.chatService.getNewMessage().subscribe(message => {
       this.messages.push(message)
-    })  
+    })
+    this.chatService.selectedUser.subscribe(user => {
+      
+    })
   }
 
   submitForm(input: HTMLInputElement) {

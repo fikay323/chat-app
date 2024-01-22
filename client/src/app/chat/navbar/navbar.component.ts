@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ChatService } from '../chat.service';
 import { SearchedUsersComponent } from './searched-users/searched-users.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   standalone: true,
@@ -15,13 +16,17 @@ import { SearchedUsersComponent } from './searched-users/searched-users.componen
 export class NavbarComponent {
   searchString: string
   timer: any
+  username: string
   usersFound: {username: string, userID: string}[] = []
 
-  constructor(private chatService: ChatService) {}
+  constructor(private authService: AuthService, private chatService: ChatService) {}
 
   ngOnInit() {
     this.chatService.searchProduced().subscribe(users => {
       this.usersFound = users
+    })
+    this.authService.userConnected.subscribe(data => {
+      this.username = data.username
     })
     this.search('a')
   }

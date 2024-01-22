@@ -13,6 +13,7 @@ export class ChatService {
   message: Subject<Message> = new Subject();
   usersFound: Subject<[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  selectedUser: Subject<{username: string, userID: string}> = new Subject()
   constructor() {}
   
   
@@ -52,5 +53,10 @@ export class ChatService {
       this.usersFound.next(users)
     })
     return this.usersFound.asObservable()
+  }
+
+  selectUser(user) {
+    console.log(user)
+    this.selectedUser.next(user)
   }
 }

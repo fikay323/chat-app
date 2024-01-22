@@ -1,4 +1,3 @@
-
 const express = require('express');
 const { createServer } = require('http');
 const { join } = require('path');
@@ -78,7 +77,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('search_user', keyword => {
-    const usersFound = allUsers.filter(user => user.username.includes(keyword))
+    const usersFound = allUsers.filter(user => user.username.includes(keyword) && user.userID !== socket.id)
     usersFound.forEach(user => {
       delete user['password']
     })

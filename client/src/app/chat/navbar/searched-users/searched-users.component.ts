@@ -14,6 +14,6 @@ export class SearchedUsersComponent {
   constructor(private chatService: ChatService) {}
 
   selectUser(user) {
-    console.log(user)
+    this.chatService.selectUser(user)
   }
 }
