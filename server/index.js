@@ -79,6 +79,9 @@ io.on('connection', (socket) => {
 
   socket.on('search_user', keyword => {
     const usersFound = allUsers.filter(user => user.username.includes(keyword))
+    usersFound.forEach(user => {
+      delete user['password']
+    })
     socket.emit('search_produced', usersFound)
   })
 

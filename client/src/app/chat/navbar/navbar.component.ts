@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ChatService } from '../chat.service';
-import { Subject } from 'rxjs';
 import { SearchedUsersComponent } from './searched-users/searched-users.component';
 
 @Component({
@@ -16,22 +15,21 @@ import { SearchedUsersComponent } from './searched-users/searched-users.componen
 export class NavbarComponent {
   searchString: string
   timer: any
-  usersFound = []
+  usersFound: {username: string, userID: string}[] = []
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
     this.chatService.searchProduced().subscribe(users => {
       this.usersFound = users
-      console.log(users)
     })
+    this.search('a')
   }
 
   search(keyword: string) {
     clearTimeout(this.timer)
     this.timer = setTimeout(() => {
       if(keyword.trim().length > 0) {
-        console.log(keyword.trim())
         this.chatService.searchUser(keyword)
       }
     },1000)
