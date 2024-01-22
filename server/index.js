@@ -66,15 +66,30 @@ io.on('connection', (socket) => {
   socket.on('send-message', (message) => {
     // if(room === '') {
       console.log(message)
-      socket.broadcast.emit('recieve-message', message)
+      // socket.broadcast.emit('recieve-message', message)
     // } else {
-      // socket.to('c2973128-66bc-4bdd-ac59-4030649bc6ad').emit('recieve-message', message)
+      socket.to('c2973128-66bc-4bdd-ac59-4030649bc6ad').emit('recieve-message', message)
     // }
   })
 
   socket.on('typing-info', message => {
     console.log(message)
     socket.broadcast.emit('typing', message)
+  })
+
+  socket.on('search_user', keyword => {
+    const usersFound = allUsers.filter(user => user.username.includes(keyword))
+    socket.emit('search_produced', usersFound)
+  })
+
+  socket.on('join_room', roomID => {
+    socket.join(roomID)
+    console.log(roomID);
+  })
+
+  socket.on('disconnecting', (reason) => {
+    console.log(reason)
+    console.log(socket.rooms, 'from disconncting')
   })
   
   socket.on('disconnect', () => {

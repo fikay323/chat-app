@@ -11,6 +11,7 @@ import { Message } from '../message.model';
 export class ChatService {
   socket = socket
   message: Subject<Message> = new Subject();
+  usersFound: Subject<[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   constructor() {}
   
@@ -40,5 +41,16 @@ export class ChatService {
       }
     })
     return this.isTyping.asObservable()
+  }
+
+  searchUser(keyword: string) {
+    socket.emit('search_user', keyword)
+  }
+  
+  searchProduced() {
+    socket.on('search_produced', users => {
+      this.usersFound.next(users)
+    })
+    return this.usersFound.asObservable()
   }
 }
