@@ -15,7 +15,32 @@ export class ChatService {
   usersFound: Subject<[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   selectedUser: Subject<SelectedUser> = new Subject()
-  constructor() {}
+  allMessages: {[key: string]: Message[]}[] = [
+    { 'caf8926d-3c59-405c-a727-238dd14e6c41': [new Message('didig', '7'), new Message('rarag', '8')] },
+    { '2802a62c-8d6e-43a0-b123-6003e6a1680b': [new Message('didi', '7'), new Message('rara', '8')] },
+    { 'c2973128-66bc-4bdd-ac59-4030649bc6ad': [new Message('didib', '7'), new Message('rarab', '8')] },
+    { '714d4762-438f-4017-a678-f3a1f0c4c8da': [new Message('didic', '7'), new Message('rarac', '8')] },
+    { 'a56ec664-7705-48b8-b3c2-7b0b3c6ec0ce': [new Message('didid', '7'), new Message('rarad', '8')] },
+  ]
+
+  constructor() {
+    // this.allMessages.map(entry => {
+    //   const enter = Object.entries(entry)[0][1]
+    //   console.log(Object.entries(entry)[0][0])
+    //   console.log(enter)
+    // })
+    // this.allMessages.map(entry => {
+    //   if(Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b') {
+    //     console.log(true)
+    //   } else {
+    //     console.log(false)
+    //   }
+    // })
+    const filtered = this.allMessages.find(entry => {
+      return Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b'
+    })
+    // console.log(filtered['2802a62c-8d6e-43a0-b123-6003e6a1680b'])
+  }
   
   
   sendMessage(message: Message) {
@@ -57,7 +82,6 @@ export class ChatService {
   }
 
   selectUser(user: SelectedUser) {
-    console.log(user)
     this.selectedUser.next(user)
   }
 }

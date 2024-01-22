@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 
 import { Message } from '../../message.model';
 import { ChatService } from '../chat.service';
@@ -10,7 +11,7 @@ import { ChatStartComponent } from '../chat-start/chat-start.component';
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, ChatStartComponent],
+  imports: [CommonModule, ChatStartComponent, FormsModule],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.css'
 })
@@ -30,24 +31,32 @@ export class ChatPageComponent {
       this.displayTyping = istyping
     })
     this.chatService.getNewMessage().subscribe(message => {
+      console.log(message)
       this.messages.push(message)
     })
     this.chatService.selectedUser.subscribe(user => {
-      this.user = user
+      if(this.user !== user){
+        this.user = user
+        const filtered = this.chatService.allMessages.find(userMessages => {
+          return Object.keys(userMessages)[0] === user.userID
+        })
+        this.messages = filtered[user.userID]
+        console.log(this.messages)
+      }
     })
   }
 
-  submitForm(input: HTMLInputElement) {
-    let message = new Message(input.value, this.socket.id)
+  submitForm(messageForm: NgForm) {
+    let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID)
     this.messages.push(message)
     this.chatService.sendMessage(message)
     this.changed = false
-    input.value = ''
+    messageForm.resetForm()
     this.chatService.emitStatus('Not typing')
   }
 
   checkTyping(event: any) {
-    const message = event.target.value
+    const message = event
     if(message != '' && this.changed == false) {
       this.changed = true
       this.chatService.emitStatus('Typing')

@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
       console.log(message)
       // socket.broadcast.emit('recieve-message', message)
     // } else {
-      socket.to('c2973128-66bc-4bdd-ac59-4030649bc6ad').emit('recieve-message', message)
+      socket.to(message.to).emit('recieve-message', message)
     // }
   })
 
