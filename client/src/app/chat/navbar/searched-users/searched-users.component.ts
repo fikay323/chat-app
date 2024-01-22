@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ChatService } from '../../chat.service';
+import { SelectedUser } from '../../../selected-user.model';
 
 @Component({
   selector: 'app-searched-users',
@@ -9,7 +10,7 @@ import { ChatService } from '../../chat.service';
   styleUrl: './searched-users.component.css'
 })
 export class SearchedUsersComponent {
-  @Input('user') user: {username: string, userID: string}
+  @Input('user') user: SelectedUser
 
   constructor(private chatService: ChatService) {}
 

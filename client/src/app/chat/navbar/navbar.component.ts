@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatService } from '../chat.service';
 import { SearchedUsersComponent } from './searched-users/searched-users.component';
 import { AuthService } from '../../auth/auth.service';
+import { SelectedUser } from '../../selected-user.model';
 
 @Component({
   standalone: true,
@@ -17,7 +18,7 @@ export class NavbarComponent {
   searchString: string
   timer: any
   username: string
-  usersFound: {username: string, userID: string}[] = []
+  usersFound: SelectedUser[] = []
 
   constructor(private authService: AuthService, private chatService: ChatService) {}
 

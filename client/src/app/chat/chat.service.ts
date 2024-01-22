@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import socket from '../socket';
 import { Message } from '../message.model';
+import { SelectedUser } from '../selected-user.model';
 
 
 @Injectable({
@@ -13,7 +14,7 @@ export class ChatService {
   message: Subject<Message> = new Subject();
   usersFound: Subject<[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  selectedUser: Subject<{username: string, userID: string}> = new Subject()
+  selectedUser: Subject<SelectedUser> = new Subject()
   constructor() {}
   
   
@@ -55,7 +56,7 @@ export class ChatService {
     return this.usersFound.asObservable()
   }
 
-  selectUser(user) {
+  selectUser(user: SelectedUser) {
     console.log(user)
     this.selectedUser.next(user)
   }

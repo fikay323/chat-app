@@ -2,10 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Message } from '../../message.model';
-import { AuthService } from '../../auth/auth.service';
 import { ChatService } from '../chat.service';
 import socket from '../../socket';
-import { map } from 'rxjs';
+import { SelectedUser } from '../../selected-user.model';
 
 @Component({
   selector: 'app-chat-page',
@@ -19,16 +18,13 @@ export class ChatPageComponent {
   messages: Message[] = []
   socket = socket
   typingMessage = 'User is typing'
-  username: string
+  user: SelectedUser
   displayTyping = false
   changed = false
 
-  constructor(private authService: AuthService, private chatService: ChatService){}
+  constructor(private chatService: ChatService){}
 
   ngOnInit(){
-    this.authService.userConnected.subscribe(data => {
-      this.username = data.username
-    })
     this.chatService.getStatus().subscribe(istyping => {
       this.displayTyping = istyping
     })
@@ -36,7 +32,7 @@ export class ChatPageComponent {
       this.messages.push(message)
     })
     this.chatService.selectedUser.subscribe(user => {
-      
+      this.user = user
     })
   }
 
