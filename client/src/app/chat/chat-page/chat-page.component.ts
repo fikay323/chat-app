@@ -5,11 +5,12 @@ import { Message } from '../../message.model';
 import { ChatService } from '../chat.service';
 import socket from '../../socket';
 import { SelectedUser } from '../../selected-user.model';
+import { ChatStartComponent } from '../chat-start/chat-start.component';
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChatStartComponent],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.css'
 })
