@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 
 
 let allUsers = []
+const unsentMessages = []
 
 io.use((socket, next) => {
   const user = socket.handshake.auth
@@ -62,17 +63,30 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   console.log('A user is connected with socketID ' + socket.id)
 
+  const currentUserUnreadMessages = unsentMessages.find(uid => socket.id in uid)
+  if(currentUserUnreadMessages) {
+    const userUnreadArray = currentUserUnreadMessages[socket.id]
+    socket.emit('unread_messages', userUnreadArray)
+  }
+
   socket.on('send-message', (message) => {
-    // if(room === '') {
-      console.log(message)
-      // socket.broadcast.emit('recieve-message', message)
-    // } else {
+    const userToSend = message.to
+    const isClientConnected = io.sockets.sockets.has(message.to)
+    console.log(`User is ${isClientConnected}`);
+    if(!isClientConnected) {
+      const targetUser = unsentMessages.find(uid => userToSend in uid)
+      if(targetUser) {
+        const targetArray = targetUser[userToSend]
+        targetArray.push(message)
+      } else {
+        unsentMessages.push({ [userToSend]: [message] })
+      }
+    } else {
       socket.to(message.to).emit('recieve-message', message)
-    // }
+    }
   })
 
   socket.on('typing-info', message => {
-    console.log(message)
     socket.broadcast.emit('typing', message)
   })
 

@@ -24,24 +24,23 @@ export class ChatService {
   ]
 
   constructor() {
-    // this.allMessages.map(entry => {
-    //   const enter = Object.entries(entry)[0][1]
-    //   console.log(Object.entries(entry)[0][0])
-    //   console.log(enter)
-    // })
-    // this.allMessages.map(entry => {
-    //   if(Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b') {
-    //     console.log(true)
-    //   } else {
-    //     console.log(false)
-    //   }
-    // })
+    const targetUser = this.allMessages.find(uid => '714d4762-438f-4017-a678-f3a1f0c4c8da' in uid)
+    const userToSend = '714d4762-438f-4017-a678-f3a1f0c4c8da'
+    const message = new Message('ndnnfn', 'jfjj')
+    if(targetUser) {
+      const targetArray = targetUser['714d4762-438f-4017-a678-f3a1f0c4c8da']
+      targetArray.push(message)
+    } else {
+      this.allMessages.push({ [userToSend]: [message] })
+    }
     const filtered = this.allMessages.find(entry => {
       return Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b'
     })
-    // console.log(filtered['2802a62c-8d6e-43a0-b123-6003e6a1680b'])
+    console.log(this.allMessages)
+    console.log('running')
   }
   
+  unRecievedMessages = () => {}
   
   sendMessage(message: Message) {
     this.socket.emit('send-message', message);
