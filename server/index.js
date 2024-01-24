@@ -60,13 +60,31 @@ io.use((socket, next) => {
   }
   return next()
 })
+
+
 io.on('connection', (socket) => {
   console.log('A user is connected with socketID ' + socket.id)
 
-  const currentUserUnreadMessages = unsentMessages.find(uid => socket.id in uid)
+  // const currentUserUnreadMessages = unsentMessages.find(uid => socket.id in uid)
+  const currentUserUnreadMessages = {
+    'c2973128-66bc-4bdd-ac59-4030649bc6ad': [
+      {
+        message: 'mklsmldls',
+        id: 'caf8926d-3c59-405c-a727-238dd14e6c41',
+        to: 'c2973128-66bc-4bdd-ac59-4030649bc6ad'
+      },
+      {
+        message: 'sdls',
+        id: 'caf8926d-3c59-405c-a727-238dd14e6c41',
+        to: 'c2973128-66bc-4bdd-ac59-4030649bc6ad'
+      }
+    ]
+  }
   if(currentUserUnreadMessages) {
     const userUnreadArray = currentUserUnreadMessages[socket.id]
+    console.log(userUnreadArray)
     socket.emit('unread_messages', userUnreadArray)
+    console.log('emitted')
   }
 
   socket.on('send-message', (message) => {

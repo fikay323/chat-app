@@ -13,6 +13,7 @@ export class ChatService {
   socket = socket
   message: Subject<Message> = new Subject();
   usersFound: Subject<[]> = new Subject();
+  messagesRecovered: Subject<Message[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   selectedUser: Subject<SelectedUser> = new Subject()
   allMessages: {[key: string]: Message[]}[] = [
@@ -37,10 +38,15 @@ export class ChatService {
       return Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b'
     })
     console.log(this.allMessages)
-    console.log('running')
   }
   
-  unRecievedMessages = () => {}
+  unRecievedMessages = () => {
+    // this.socket.on('unread_messages', unreadMessages => {
+    //   console.log(unreadMessages)
+    //   this.messagesRecovered.next(unreadMessages)
+    // })
+    // return this.messagesRecovered.asObservable()
+  }
   
   sendMessage(message: Message) {
     this.socket.emit('send-message', message);

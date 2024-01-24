@@ -27,6 +27,9 @@ export class ChatPageComponent {
   constructor(private chatService: ChatService){}
 
   ngOnInit(){
+    this.socket.on('unread_messages', data => {
+      console.log(data)
+    })
     this.chatService.getStatus().subscribe(istyping => {
       this.displayTyping = istyping
     })
