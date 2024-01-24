@@ -13,39 +13,24 @@ export class ChatService {
   socket = socket
   message: Subject<Message> = new Subject();
   usersFound: Subject<[]> = new Subject();
-  messagesRecovered: Subject<Message[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   selectedUser: Subject<SelectedUser> = new Subject()
-  allMessages: {[key: string]: Message[]}[] = [
-    { 'caf8926d-3c59-405c-a727-238dd14e6c41': [new Message('didig', '7'), new Message('rarag', '8')] },
-    { '2802a62c-8d6e-43a0-b123-6003e6a1680b': [new Message('didi', '7'), new Message('rara', '8')] },
-    { 'c2973128-66bc-4bdd-ac59-4030649bc6ad': [new Message('didib', '7'), new Message('rarab', '8')] },
-    { '714d4762-438f-4017-a678-f3a1f0c4c8da': [new Message('didic', '7'), new Message('rarac', '8')] },
-    { 'a56ec664-7705-48b8-b3c2-7b0b3c6ec0ce': [new Message('didid', '7'), new Message('rarad', '8')] },
-  ]
-
-  constructor() {
-    const targetUser = this.allMessages.find(uid => '714d4762-438f-4017-a678-f3a1f0c4c8da' in uid)
-    const userToSend = '714d4762-438f-4017-a678-f3a1f0c4c8da'
-    const message = new Message('ndnnfn', 'jfjj')
-    if(targetUser) {
-      const targetArray = targetUser['714d4762-438f-4017-a678-f3a1f0c4c8da']
-      targetArray.push(message)
-    } else {
-      this.allMessages.push({ [userToSend]: [message] })
-    }
-    const filtered = this.allMessages.find(entry => {
-      return Object.keys(entry)[0] === '2802a62c-8d6e-43a0-b123-6003e6a1680b'
-    })
-    console.log(this.allMessages)
-  }
+  allMessages: {[key: string]: Message[]}[] = []
   
   unRecievedMessages = () => {
-    // this.socket.on('unread_messages', unreadMessages => {
-    //   console.log(unreadMessages)
-    //   this.messagesRecovered.next(unreadMessages)
-    // })
-    // return this.messagesRecovered.asObservable()
+    this.socket.on('unread_messages', (unreadMessages: Message[]) => {
+      unreadMessages.map(messagesRecieved => {
+        const isPresent = this.allMessages.find(uid => messagesRecieved.id in uid)
+        if(isPresent) {
+          Object.entries(isPresent)[0][1].push(messagesRecieved)
+        } else {
+          const presentUser = {
+            [messagesRecieved.id] : [messagesRecieved]
+          }
+          this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
+        }
+      })
+    })
   }
   
   sendMessage(message: Message) {
@@ -53,7 +38,7 @@ export class ChatService {
   }
 
   getNewMessage = () => {
-    this.socket.on('recieve-message', (message) =>{
+    this.socket.on('receive-message', (message) =>{
       this.message.next(message);
     });
     return this.message.asObservable();

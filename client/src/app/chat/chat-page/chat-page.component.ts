@@ -27,9 +27,7 @@ export class ChatPageComponent {
   constructor(private chatService: ChatService){}
 
   ngOnInit(){
-    this.socket.on('unread_messages', data => {
-      console.log(data)
-    })
+    this.chatService.unRecievedMessages()
     this.chatService.getStatus().subscribe(istyping => {
       this.displayTyping = istyping
     })
@@ -43,8 +41,11 @@ export class ChatPageComponent {
         const filtered = this.chatService.allMessages.find(userMessages => {
           return Object.keys(userMessages)[0] === user.userID
         })
-        this.messages = filtered[user.userID]
-        console.log(this.messages)
+        if(filtered) {
+          this.messages = filtered[user.userID]
+        } else {
+          this.messages = []
+        }
       }
     })
   }

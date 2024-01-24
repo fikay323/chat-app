@@ -28,18 +28,10 @@ export class AuthService {
   }
 
   autoLogin() {
-    if(localStorage['userID']) {
-      const userID = localStorage.getItem('userID')
-      socket.auth = { userID: userID, auth: 'auto-login' }
-      socket.connect()
-    }
-  }
-    
-  handleAuthentication(userdata, isFetching) {
-    let currentDate = new Date();
-    let newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() + 2)
-    isFetching = false
-    this.router.navigate(['/tasks/today'])
+    // if(localStorage['userID']) {
+    //   const userID = localStorage.getItem('userID')
+    //   socket.auth = { userID: userID, auth: 'auto-login' }
+    //   socket.connect()
+    // }
   }
 }
