@@ -8,9 +8,10 @@ import socket from './socket';
 export const ChatResolver: ResolveFn<{[key: string]: Message[]}[]> = (route, state) => {
   const chatService = inject(ChatService)
   if(localStorage[`${socket.id}`]) {
-    const savedArray = JSON.parse(localStorage.getItem(`${socket.id}`))
-    chatService.allMessages = savedArray
-    return savedArray
+    const savedData = JSON.parse(localStorage.getItem(`${socket.id}`))
+    chatService.allUsers = savedData[0].allUsers
+    chatService.allMessages = savedData[1].allMessages
+    return savedData
   }
   return []
 };

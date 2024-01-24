@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { Message } from '../../message.model';
@@ -16,13 +16,14 @@ import { ChatStartComponent } from '../chat-start/chat-start.component';
   styleUrl: './chat-page.component.css'
 })
 export class ChatPageComponent {
-  messagess: string[] = ['efdd', 'dvjdld', 'vidjdo9jdo', 'nkdjnvid', 'fdbhjf', 'sndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsndsjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj']
   messages: Message[] = []
+  @ViewChild('scrollMe') private scrollContainer: ElementRef
   socket = socket
   typingMessage = 'User is typing'
   user: SelectedUser
   displayTyping = false
   changed = false
+  isInputFocused = false
 
   constructor(private chatService: ChatService){}
 
@@ -43,6 +44,7 @@ export class ChatPageComponent {
         })
         if(filtered) {
           this.messages = filtered[user.userID]
+          this.scrollToBottom()
         } else {
           this.messages = []
         }
@@ -50,9 +52,31 @@ export class ChatPageComponent {
     })
   }
 
+  ngAfterViewChecked() {
+    if(!this.isInputFocused) {
+      this.scrollToBottom()
+    }
+  }
+
+  onInputFocus() {
+    this.isInputFocused = true
+  }
+
+  onInputBlur() {
+    this.isInputFocused = false
+  }
+
+  scrollToBottom() {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight
+    } catch (error) {
+    }
+  }
+
   submitForm(messageForm: NgForm) {
     let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID)
     this.messages.push(message)
+    this.scrollToBottom()
     this.chatService.sendMessage(message)
     this.chatService.updateAllMessages(message, this.user.userID)
     this.changed = false

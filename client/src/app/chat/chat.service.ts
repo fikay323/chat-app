@@ -16,6 +16,7 @@ export class ChatService {
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   selectedUser: Subject<SelectedUser> = new Subject()
   allMessages: {[key: string]: Message[]}[] = []
+  allUsers: SelectedUser[] = []
   
   unRecievedMessages = () => {
     this.socket.on('unread_messages', (unreadMessages: Message[]) => {
@@ -26,9 +27,14 @@ export class ChatService {
         } else {
           this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
         }
-        localStorage.setItem(socket.id, JSON.stringify(this.allMessages))
+        this.saveToLocalStorage()
       })
     })
+  }
+
+  saveToLocalStorage() {
+    const allData  = [{usersChatted: this.allUsers}, {allMessages: this.allMessages}]
+    localStorage.setItem(`${socket.id}`, JSON.stringify(allData))
   }
 
   updateAllMessages(message: Message, id: string) {
@@ -38,8 +44,10 @@ export class ChatService {
     } else {
       this.allMessages.push({ [id] : [message] })
     }
-    localStorage.setItem(socket.id, JSON.stringify(this.allMessages))
+    this.saveToLocalStorage()
   }
+
+  updateAllUsers(){}
   
   sendMessage(message: Message) {
     this.socket.emit('send-message', message);
