@@ -24,13 +24,20 @@ export class ChatService {
         if(isPresent) {
           Object.entries(isPresent)[0][1].push(messagesRecieved)
         } else {
-          const presentUser = {
-            [messagesRecieved.id] : [messagesRecieved]
-          }
           this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
         }
       })
     })
+  }
+
+  updateAllMessages(message: Message, id: string) {
+    const isPresent = this.allMessages.find(userMessaged => id in userMessaged)
+    if(isPresent) {
+      Object.entries(isPresent)[0][1].push(message)
+    } else {
+      this.allMessages.push({ [id] : [message] })
+    }
+    localStorage.setItem(socket.id, JSON.stringify(this.allMessages))
   }
   
   sendMessage(message: Message) {

@@ -54,6 +54,7 @@ export class ChatPageComponent {
     let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID)
     this.messages.push(message)
     this.chatService.sendMessage(message)
+    this.chatService.updateAllMessages(message, this.user.userID)
     this.changed = false
     messageForm.resetForm()
     this.chatService.emitStatus('Not typing')
