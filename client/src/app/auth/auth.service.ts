@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import socket from '../socket';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { User } from '../user.model';
 
 @Injectable({
@@ -14,6 +14,8 @@ export class AuthService {
   errorMessage: string = null
   isConnected = new BehaviorSubject<boolean>(false)
   userConnected = new BehaviorSubject<User>(null)
+
+
   constructor(private router: Router) {}
   
   signUp(user: any) {
@@ -28,10 +30,18 @@ export class AuthService {
   }
 
   autoLogin() {
-    // if(localStorage['userID']) {
-    //   const userID = localStorage.getItem('userID')
-    //   socket.auth = { userID: userID, auth: 'auto-login' }
-    //   socket.connect()
-    // }
+    const isUserIDPresent = localStorage['userID']
+    if (isUserIDPresent) {
+      const userID = localStorage.getItem('userID');
+      socket.auth = { userID: userID, auth: 'auto-login' };
+      socket.connect();
+    }
+    this.userConnected.pipe(tap(user => {
+    socket.on('connect', () => {
+      if(socket.connected && user) {
+       this.router.navigate(['chat']);
+      }
+    })
+  }))
   }
 }
