@@ -26,6 +26,8 @@ export class ChatService {
         } else {
           this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
         }
+        localStorage.setItem(socket.id, JSON.stringify(this.allMessages))
+        console.log(this.allMessages)
       })
     })
   }

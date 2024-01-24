@@ -1,9 +1,9 @@
-import { ResolveFn, Router } from '@angular/router';
+import { ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 
-import socket from './socket';
-import { Message } from './message.model';
 import { ChatService } from './chat/chat.service';
+import { Message } from './message.model';
+import socket from './socket';
 
 export const ChatResolver: ResolveFn<{[key: string]: Message[]}[]> = (route, state) => {
   const chatService = inject(ChatService)
