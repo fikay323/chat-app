@@ -68,11 +68,10 @@ io.on('connection', (socket) => {
   const currentUserUnreadMessages = unsentMessages.find(uid => socket.id in uid)
   if(currentUserUnreadMessages) {
     const userUnreadArray = currentUserUnreadMessages[socket.id]
-    console.log(userUnreadArray)
-    console.log('emitted')
+    const index = unsentMessages.findIndex(users => currentUserUnreadMessages === users)
+    unsentMessages.splice(index, 1)
     setTimeout(() => {
       socket.emit('unread_messages', userUnreadArray)
-      console.log('emitted')
     }, 1000)
   }
 
