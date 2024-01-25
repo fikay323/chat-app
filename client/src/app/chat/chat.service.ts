@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import socket from '../socket';
 import { Message } from '../message.model';
 import { SelectedUser } from '../selected-user.model';
+import { AuthService } from '../auth/auth.service';
 
 
 @Injectable({
@@ -11,21 +12,35 @@ import { SelectedUser } from '../selected-user.model';
 
 export class ChatService {
   socket = socket
+  username: string
   message: Subject<Message> = new Subject();
   usersFound: Subject<[]> = new Subject();
   isTyping: BehaviorSubject<boolean> = new BehaviorSubject(false);
   selectedUser: Subject<SelectedUser> = new Subject()
   allMessages: {[key: string]: Message[]}[] = []
   allUsers: SelectedUser[] = []
+
+  constructor(private authService: AuthService) {
+    this.authService.userConnected.subscribe(data => {
+      this.username = data.username
+    })
+  }
   
   unRecievedMessages = () => {
     this.socket.on('unread_messages', (unreadMessages: Message[]) => {
+      console.log(this.unRecievedMessages)
       unreadMessages.map(messagesRecieved => {
         const isPresent = this.allMessages.find(uid => messagesRecieved.id in uid)
         if(isPresent) {
           Object.entries(isPresent)[0][1].push(messagesRecieved)
         } else {
           this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
+        }
+        const chatPresent = this.allUsers.find(uid => messagesRecieved.id in uid)
+        if(chatPresent) {
+          Object.entries(chatPresent)[0][1].push()
+        } else {
+          this.allUsers.push()
         }
         this.saveToLocalStorage()
       })

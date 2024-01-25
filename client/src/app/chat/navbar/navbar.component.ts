@@ -16,29 +16,42 @@ import { SelectedUser } from '../../selected-user.model';
 })
 export class NavbarComponent {
   searchString: string = ''
+  isSearching: boolean = false
+  isSearchFound: boolean = false
   timer: any
-  username: string
+  username: string = this.chatService.username
   usersFound: SelectedUser[] = []
   usersChatted: SelectedUser[] = this.chatService.allUsers
 
-  constructor(private authService: AuthService, private chatService: ChatService) {}
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {
     this.chatService.searchProduced().subscribe(users => {
-      this.usersFound = users
-    })
-    this.authService.userConnected.subscribe(data => {
-      this.username = data.username
+      if(users.length > 0) {
+        this.usersFound = users
+        this.isSearchFound = true
+      } else {
+        this.isSearchFound = false
+      }
+      this.isSearching = false
     })
   }
 
-  clearSearch() {}
+  clearSearch() {
+    this.isSearchFound = false
+    this.isSearching = false
+    this.usersFound = []
+    this.searchString = ''
+  }
 
   search(keyword: string) {
     clearTimeout(this.timer)
+    this.isSearching = true
     this.timer = setTimeout(() => {
       if(keyword.trim().length > 0) {
         this.chatService.searchUser(keyword)
+      } else {
+        this.isSearching = false
       }
     },1000)
   }

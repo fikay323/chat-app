@@ -7,6 +7,7 @@ import { ChatService } from '../chat.service';
 import socket from '../../socket';
 import { SelectedUser } from '../../selected-user.model';
 import { ChatStartComponent } from '../chat-start/chat-start.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -21,6 +22,7 @@ export class ChatPageComponent {
   socket = socket
   typingMessage = 'User is typing'
   user: SelectedUser
+  username = this.chatService.username
   displayTyping = false
   changed = false
   isInputFocused = false
@@ -74,7 +76,7 @@ export class ChatPageComponent {
   }
 
   submitForm(messageForm: NgForm) {
-    let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID)
+    let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID, this.username)
     this.messages.push(message)
     this.scrollToBottom()
     this.chatService.sendMessage(message)
