@@ -33,21 +33,30 @@ export class ChatService {
   }
 
   saveToLocalStorage() {
-    const allData  = [{usersChatted: this.allUsers}, {allMessages: this.allMessages}]
+    const allData  = [{allMessages: this.allMessages}, {usersChatted: this.allUsers}]
     localStorage.setItem(`${socket.id}`, JSON.stringify(allData))
   }
 
-  updateAllMessages(message: Message, id: string) {
-    const isPresent = this.allMessages.find(userMessaged => id in userMessaged)
+  updateAllMessages(messages: Message[], user: SelectedUser) {
+    const isPresent = this.allMessages.find(userMessaged => user.userID in userMessaged)
     if(isPresent) {
-      Object.entries(isPresent)[0][1].push(message)
+      Object.entries(isPresent)[0][1] = messages
     } else {
-      this.allMessages.push({ [id] : [message] })
+      this.allMessages.push({ [user.userID] : [...messages] })
+    }
+    this.updateAllUsers(user)
+  }
+
+  updateAllUsers(user: SelectedUser){
+    if(this.allUsers.includes(user)) {
+      const index = this.allUsers.indexOf(user)
+      this.allUsers.splice(index, 1)
+      this.allUsers.unshift(user)
+    } else {
+      this.allUsers.unshift(user)
     }
     this.saveToLocalStorage()
   }
-
-  updateAllUsers(){}
   
   sendMessage(message: Message) {
     this.socket.emit('send-message', message);

@@ -15,10 +15,11 @@ import { SelectedUser } from '../../selected-user.model';
     imports: [CommonModule, FormsModule, SearchedUsersComponent],
 })
 export class NavbarComponent {
-  searchString: string
+  searchString: string = ''
   timer: any
   username: string
   usersFound: SelectedUser[] = []
+  usersChatted: SelectedUser[] = this.chatService.allUsers
 
   constructor(private authService: AuthService, private chatService: ChatService) {}
 
@@ -29,8 +30,9 @@ export class NavbarComponent {
     this.authService.userConnected.subscribe(data => {
       this.username = data.username
     })
-    this.search('a')
   }
+
+  clearSearch() {}
 
   search(keyword: string) {
     clearTimeout(this.timer)

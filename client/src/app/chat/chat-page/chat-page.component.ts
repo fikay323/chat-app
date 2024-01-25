@@ -78,7 +78,8 @@ export class ChatPageComponent {
     this.messages.push(message)
     this.scrollToBottom()
     this.chatService.sendMessage(message)
-    this.chatService.updateAllMessages(message, this.user.userID)
+    this.chatService.updateAllMessages(this.messages, this.user)
+    // this.chatService.updateAllUsers(this.user)
     this.changed = false
     messageForm.resetForm()
     this.chatService.emitStatus('Not typing')
