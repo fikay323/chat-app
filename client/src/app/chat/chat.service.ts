@@ -28,7 +28,6 @@ export class ChatService {
   
   unRecievedMessages = () => {
     this.socket.on('unread_messages', (unreadMessages: Message[]) => {
-      console.log(this.unRecievedMessages)
       unreadMessages.map(messagesRecieved => {
         const isPresent = this.allMessages.find(uid => messagesRecieved.id in uid)
         if(isPresent) {
@@ -36,11 +35,13 @@ export class ChatService {
         } else {
           this.allMessages.push({ [messagesRecieved.id] : [messagesRecieved] })
         }
-        const chatPresent = this.allUsers.find(uid => messagesRecieved.id in uid)
+        const chatPresent = this.allUsers.find(uid => messagesRecieved.id === uid.userID)
         if(chatPresent) {
-          Object.entries(chatPresent)[0][1].push()
+          const index = this.allUsers.indexOf(chatPresent)
+          this.allUsers.splice(index, 1)
+          this.allUsers.unshift(chatPresent)
         } else {
-          this.allUsers.push()
+          this.allUsers.unshift(new SelectedUser(messagesRecieved.from, messagesRecieved.id))
         }
         this.saveToLocalStorage()
       })
@@ -63,14 +64,19 @@ export class ChatService {
   }
 
   updateAllUsers(user: SelectedUser){
-    if(this.allUsers.includes(user)) {
-      const index = this.allUsers.indexOf(user)
+    console.log(this.allUsers)
+    console.log(user)
+    const userFound = this.allUsers.find((users) => users.userID === user.userID)
+    if(userFound) {
+      console.log(userFound)
+      const index = this.allUsers.indexOf(userFound)
       this.allUsers.splice(index, 1)
       this.allUsers.unshift(user)
     } else {
       this.allUsers.unshift(user)
+      console.log('not found')
     }
-    this.saveToLocalStorage()
+    // this.saveToLocalStorage()
   }
   
   sendMessage(message: Message) {
@@ -80,6 +86,14 @@ export class ChatService {
   getNewMessage = () => {
     this.socket.on('receive-message', (message) =>{
       this.message.next(message);
+      const isPresent = this.allMessages.find(userMessaged => message.id in userMessaged)
+      if(isPresent) {
+        Object.entries(isPresent)[0][1].push(message)
+      } else {
+        this.allMessages.push({ [message.id] : [message] })
+      }
+      const user: SelectedUser = new SelectedUser(message.from, message.id)
+      this.updateAllUsers(user)
     });
     return this.message.asObservable();
   };

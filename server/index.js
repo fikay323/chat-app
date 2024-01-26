@@ -49,7 +49,7 @@ io.use((socket, next) => {
   } else if(auth === 'login') {
     const userDetails = socket.handshake.auth
     const user = allUsers.find((person) => {
-      return person.username === userDetails.username
+      return person.username === userDetails.username && person.password === userDetails.password
     })
     if(user) {
       socket.id = user.userID

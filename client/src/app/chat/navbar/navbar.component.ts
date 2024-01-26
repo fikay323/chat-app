@@ -35,6 +35,7 @@ export class NavbarComponent {
       }
       this.isSearching = false
     })
+    this.search('ai')
   }
 
   clearSearch() {

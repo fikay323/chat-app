@@ -19,6 +19,7 @@ import { AuthService } from '../../auth/auth.service';
 export class ChatPageComponent {
   messages: Message[] = []
   @ViewChild('scrollMe') private scrollContainer: ElementRef
+  @ViewChild('bottom') private bottom: ElementRef
   socket = socket
   typingMessage = 'User is typing'
   user: SelectedUser
@@ -34,10 +35,7 @@ export class ChatPageComponent {
     this.chatService.getStatus().subscribe(istyping => {
       this.displayTyping = istyping
     })
-    this.chatService.getNewMessage().subscribe(message => {
-      console.log(message)
-      this.messages.push(message)
-    })
+    this.chatService.getNewMessage().subscribe()
     this.chatService.selectedUser.subscribe(user => {
       if(this.user !== user){
         this.user = user
@@ -81,7 +79,7 @@ export class ChatPageComponent {
     this.scrollToBottom()
     this.chatService.sendMessage(message)
     this.chatService.updateAllMessages(this.messages, this.user)
-    // this.chatService.updateAllUsers(this.user)
+    console.log(this.bottom)
     this.changed = false
     messageForm.resetForm()
     this.chatService.emitStatus('Not typing')

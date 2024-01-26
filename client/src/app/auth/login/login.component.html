@@ -12,7 +12,7 @@
         <p class="text-zinc-600 text-sm font-medium mt-3 text-center">Don't have an account? <a routerLink="/auth/register" class="hover:underline hover:font-semibold cursor-pointer">Sign Up</a></p>
     </form>
 </div>
-<div *ngIf="isFetching" class="text-center">
+<div *ngIf="(isFetching)" class="text-center">
     <app-loading-spinner></app-loading-spinner>
 </div>
 <app-alert *ngIf="errorMessage" [message]="errorMessage" (close)="closeAlertComponent()"></app-alert>

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { AlertComponent } from '../alert/alert.component';
+import { Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -14,14 +15,24 @@ import { AlertComponent } from '../alert/alert.component';
   imports: [FormsModule, CommonModule, RouterModule, LoadingSpinnerComponent, AlertComponent]
 })
 export class LoginComponent {
-  isFetching = this.authService.isFetching
-  errorMessage = null
+  // isFetching = this.authService.isFetching
+  isFetching: boolean = false
+  errorMessage: string
 
   constructor(private authService: AuthService) {}
 
+  ngOnInit() {
+    this.authService.isFetching.subscribe(value => {
+      this.isFetching = value
+    })
+    this.authService.errorMessage.subscribe(value => {
+      this.errorMessage = value
+    })
+  }
+
   login(loginForm: NgForm) {
     if(!loginForm.valid) return
-    this.isFetching = true
+    this.authService.isFetching.next(true)
     const user = {
       username: loginForm.value.username,
       password: loginForm.value.password

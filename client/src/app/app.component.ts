@@ -13,16 +13,20 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent {
   constructor(private router: Router, private authService: AuthService) {}
   ngOnInit() {
+    this.authService.isConnected.subscribe(data => {
+      console.log(data)
+    })
     this.authService.autoLogin()
     socket.on('connect', () => {
-      this.authService.isFetching = false
+      this.authService.isFetching.next(false)
       this.authService.isConnected.next(true)
-      localStorage.setItem('userID', socket.id)
+      // localStorage.setItem('userID', socket.id)
       this.router.navigate(['chat'])
     })
     socket.on('connect_error', err => {
-      this.authService.isFetching = false
-      this.authService.errorMessage = err.message
+      console.log('hit')
+      this.authService.isFetching.next(false)
+      this.authService.errorMessage.next(err.message)
       localStorage.removeItem('userID')
       this.authService.isConnected.next(false)
       this.router.navigate(['auth/login'])

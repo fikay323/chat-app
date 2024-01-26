@@ -1,3 +1,7 @@
+#main {
+  background-color: red !important;
+  height: calc(100vh - 100px) !important;
+}
 #input { 
   border: none; 
   padding: 0 1rem; 
@@ -23,7 +27,7 @@
 #messages {
   list-style-type: none; 
   margin: 0; 
-  padding: 0 0 40px 0;
+  padding: 0 0 0px 0;
   /* scroll-behavior: smooth; */
 }
 

@@ -14,14 +14,23 @@ import { RouterModule } from '@angular/router';
   imports: [FormsModule, CommonModule, LoadingSpinnerComponent, AlertComponent, RouterModule]
 })
 export class RegisterComponent {
-  isFetching = this.authService.isFetching
-  errorMessage = this.authService.errorMessage
+  isFetching = false
+  errorMessage: string
 
   constructor(private authService: AuthService){}
 
+  ngOnInit() {
+    this.authService.isFetching.subscribe(value => {
+      this.isFetching = value
+    })
+    this.authService.errorMessage.subscribe(value => {
+      this.errorMessage = value
+    })
+  }
+
   register(registerForm: NgForm) {
     if(!registerForm.valid) return
-    this.isFetching = true
+    this.authService.isFetching.next(true)
     const user = {
       username: registerForm.value.username,
       password: registerForm.value.password

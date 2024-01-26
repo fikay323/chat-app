@@ -10,8 +10,8 @@ import { User } from '../user.model';
 })
 
 export class AuthService {
-  isFetching: boolean = false
-  errorMessage: string = null
+  isFetching: BehaviorSubject<boolean> = new BehaviorSubject(false)
+  errorMessage: BehaviorSubject<string> = new BehaviorSubject(null)
   isConnected = new BehaviorSubject<boolean>(false)
   userConnected = new BehaviorSubject<User>(null)
 
