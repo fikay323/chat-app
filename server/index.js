@@ -3,7 +3,7 @@ const { createServer } = require('http');
 const { join } = require('path');
 const { Server } = require('socket.io')
 const { v4:uuidv4 } = require('uuid')
-const fs = require('node:fs')
+const fs = require('node:fs');
 
 const app = express()
 const server = createServer(app)
@@ -74,10 +74,6 @@ io.on('connection', (socket) => {
       socket.emit('unread_messages', userUnreadArray)
     }, 1000)
   }
-
-  socket.on('connect', () => {
-    console.log('connected')
-  })
 
   socket.on('send-message', (message) => {
     const userToSend = message.to

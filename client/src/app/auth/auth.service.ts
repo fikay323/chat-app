@@ -29,6 +29,13 @@ export class AuthService {
     socket.connect()
   }
 
+  logOut() {
+    this.isFetching.next(false)
+    localStorage.removeItem('userID')
+    this.isConnected.next(false)
+    this.router.navigate(['auth/login'])
+  }
+
   autoLogin() {
     const isUserIDPresent = localStorage['userID']
     if (isUserIDPresent) {

@@ -7,7 +7,6 @@ import { ChatService } from '../chat.service';
 import socket from '../../socket';
 import { SelectedUser } from '../../selected-user.model';
 import { ChatStartComponent } from '../chat-start/chat-start.component';
-import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -19,7 +18,6 @@ import { AuthService } from '../../auth/auth.service';
 export class ChatPageComponent {
   messages: Message[] = []
   @ViewChild('scrollMe') private scrollContainer: ElementRef
-  @ViewChild('bottom') private bottom: ElementRef
   socket = socket
   typingMessage = 'User is typing'
   user: SelectedUser
@@ -35,9 +33,8 @@ export class ChatPageComponent {
     this.chatService.getStatus().subscribe(istyping => {
       this.displayTyping = istyping
     })
-    this.chatService.getNewMessage().subscribe()
     this.chatService.selectedUser.subscribe(user => {
-      if(this.user !== user){
+      if(this.user !== user || this.messages.length === 0){
         this.user = user
         const filtered = this.chatService.allMessages.find(userMessages => {
           return Object.keys(userMessages)[0] === user.userID
@@ -48,6 +45,8 @@ export class ChatPageComponent {
         } else {
           this.messages = []
         }
+      } else {
+        console.log('idiot')
       }
     })
   }
@@ -75,14 +74,12 @@ export class ChatPageComponent {
 
   submitForm(messageForm: NgForm) {
     let message = new Message(messageForm.value['message'], this.socket.id, this.user.userID, this.username)
-    this.messages.push(message)
     this.scrollToBottom()
     this.chatService.sendMessage(message)
-    this.chatService.updateAllMessages(this.messages, this.user)
-    console.log(this.bottom)
-    this.changed = false
-    messageForm.resetForm()
-    this.chatService.emitStatus('Not typing')
+    this.chatService.updateAllMessages(message, this.user)
+    messageForm.setValue({
+      "message": ''
+    })
   }
 
   checkTyping(event: any) {

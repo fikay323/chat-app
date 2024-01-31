@@ -43,7 +43,7 @@ export class ChatService {
         } else {
           this.allUsers.unshift(new SelectedUser(messagesRecieved.from, messagesRecieved.id))
         }
-        this.saveToLocalStorage()
+        // this.saveToLocalStorage()
       })
     })
   }
@@ -53,28 +53,25 @@ export class ChatService {
     localStorage.setItem(`${socket.id}`, JSON.stringify(allData))
   }
 
-  updateAllMessages(messages: Message[], user: SelectedUser) {
+  updateAllMessages(message: Message, user: SelectedUser) {
     const isPresent = this.allMessages.find(userMessaged => user.userID in userMessaged)
     if(isPresent) {
-      Object.entries(isPresent)[0][1] = messages
+      Object.entries(isPresent)[0][1].push(message)
     } else {
-      this.allMessages.push({ [user.userID] : [...messages] })
+      this.allMessages.push({ [user.userID] : [message] })
+      this.selectedUser.next(user)
     }
     this.updateAllUsers(user)
   }
 
   updateAllUsers(user: SelectedUser){
-    console.log(this.allUsers)
-    console.log(user)
     const userFound = this.allUsers.find((users) => users.userID === user.userID)
     if(userFound) {
-      console.log(userFound)
       const index = this.allUsers.indexOf(userFound)
       this.allUsers.splice(index, 1)
       this.allUsers.unshift(user)
     } else {
       this.allUsers.unshift(user)
-      console.log('not found')
     }
     // this.saveToLocalStorage()
   }
@@ -84,8 +81,9 @@ export class ChatService {
   }
 
   getNewMessage = () => {
-    this.socket.on('receive-message', (message) =>{
+    this.socket.on('receive-message', (message: Message) =>{
       this.message.next(message);
+      console.log(message)
       const isPresent = this.allMessages.find(userMessaged => message.id in userMessaged)
       if(isPresent) {
         Object.entries(isPresent)[0][1].push(message)

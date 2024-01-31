@@ -6,6 +6,7 @@ import { ChatService } from '../chat.service';
 import { SearchedUsersComponent } from './searched-users/searched-users.component';
 import { AuthService } from '../../auth/auth.service';
 import { SelectedUser } from '../../selected-user.model';
+import socket from '../../socket';
 
 @Component({
   standalone: true,
@@ -23,7 +24,7 @@ export class NavbarComponent {
   usersFound: SelectedUser[] = []
   usersChatted: SelectedUser[] = this.chatService.allUsers
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService, private authService: AuthService) {}
 
   ngOnInit() {
     this.chatService.searchProduced().subscribe(users => {
@@ -35,7 +36,7 @@ export class NavbarComponent {
       }
       this.isSearching = false
     })
-    this.search('ai')
+    this.chatService.getNewMessage().subscribe()
   }
 
   clearSearch() {
@@ -55,5 +56,10 @@ export class NavbarComponent {
         this.isSearching = false
       }
     },1000)
+  }
+
+  logOut() {
+    this.authService.logOut()
+    socket.disconnect()
   }
 };
